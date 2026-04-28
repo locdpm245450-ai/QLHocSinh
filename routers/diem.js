@@ -7,47 +7,26 @@ const MonHoc = require('../models/monhoc');
 
 
 // ================= DANH SÁCH ĐIỂM =================
-
 router.get('/', async (req, res) => {
-
     if (!req.session.MaNguoiDung) {
         return res.redirect('/dangnhap');
     }
 
     let dsDiem;
-
-    // admin + giáo viên xem tất cả
-    if (
-        req.session.QuyenHan === 'giaovien' ||
-        req.session.QuyenHan === 'admin'
-    ) {
-
-        dsDiem = await Diem.find()
-            .populate('HocSinh')
-            .populate('MonHoc');
-
-    }
-
-    // học sinh chỉ xem điểm mình
-    else {
-
-        dsDiem = await Diem.find({
-            HocSinh: req.session.MaNguoiDung
-        })
-            .populate('HocSinh')
-            .populate('MonHoc');
-
+    if (req.session.QuyenHan === 'giaovien' || req.session.QuyenHan === 'admin') {
+        dsDiem = await Diem.find().populate('HocSinh').populate('MonHoc');
+    } else {
+        dsDiem = await Diem.find({ HocSinh: req.session.MaNguoiDung }).populate('HocSinh').populate('MonHoc');
     }
 
     res.render('diem', {
         dsDiem,
         session: req.session
     });
-
 });
 
 
-// ================= FORM THÊM ĐIỂM =================
+// ================= FORM THÊM ĐIỂM (HIỂN THỊ) =================
 router.get('/them', async (req, res) => {
     if (req.session.QuyenHan !== 'giaovien' && req.session.QuyenHan !== 'admin') {
         return res.send('Không có quyền');
@@ -59,13 +38,43 @@ router.get('/them', async (req, res) => {
 
         res.render('diem_them', {
             session: req.session,
-            hocsinh: dsHocSinh, 
-            monhoc: dsMonHoc    
+            hocsinh: dsHocSinh,
+            monhoc: dsMonHoc
         });
     } catch (err) {
         res.status(500).send("Lỗi: " + err.message);
     }
 });
+
+
+// ================= XỬ LÝ LƯU ĐIỂM MỚI (POST) - THÊM PHẦN NÀY =================
+router.post('/them', async (req, res) => {
+    if (req.session.QuyenHan !== 'giaovien' && req.session.QuyenHan !== 'admin') {
+        return res.status(403).send('Không có quyền thực hiện');
+    }
+
+    try {
+        const { HocSinh, MonHoc, DiemMieng, Diem15Phut, Diem1Tiet, DiemThi, HocKy, NamHoc } = req.body;
+
+        // Tạo một bản ghi điểm mới
+        const diemMoi = new Diem({
+            HocSinh,
+            MonHoc,
+            DiemMieng,
+            Diem15Phut,
+            Diem1Tiet,
+            DiemThi,
+            HocKy,
+            NamHoc
+        });
+
+        await diemMoi.save(); // Lưu vào Database
+        res.redirect('/diem'); // Lưu xong quay về danh sách điểm
+    } catch (err) {
+        res.status(500).send("Lỗi khi thêm điểm: " + err.message);
+    }
+});
+
 
 // ================= XÓA ĐIỂM =================
 router.get('/xoa/:id', async (req, res) => {
