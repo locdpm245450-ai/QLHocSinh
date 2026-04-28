@@ -1,0 +1,23 @@
+<div class="container mt-3">
+    <h3>Điểm của bạn</h3>
+
+    <table class="table table-bordered">
+        <tr>
+            <th>Môn</th>
+            <th>Điểm miệng</th>
+            <th>15p</th>
+            <th>1 tiết</th>
+            <th>Thi</th>
+        </tr>
+
+        <% diem.forEach(d => { %>
+            <tr>
+                <td><%= d.MonHoc.TenMon %></td>
+                <td><%= d.DiemMieng %></td>
+                <td><%= d.Diem15Phut %></td>
+                <td><%= d.Diem1Tiet %></td>
+                <td><%= d.DiemThi %></td>
+            </tr>
+        <% }) %>
+    </table>
+</div>

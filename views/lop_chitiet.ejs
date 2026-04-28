@@ -1,0 +1,28 @@
+<h1>
+    <%= lop.TenLop %>
+</h1>
+
+<h3>Danh sách học sinh</h3>
+
+<ul>
+
+    <% lop.HocSinh.forEach(hs=> { %>
+
+        <li>
+            <%= hs %>
+        </li>
+
+        <% }) %>
+
+</ul>
+
+
+<form method="POST" action="/lop/them-hocsinh/<%= lop._id %>">
+
+    <input type="text" name="hocsinh" placeholder="Tên học sinh">
+
+    <button type="submit">
+        Thêm học sinh
+    </button>
+
+</form>

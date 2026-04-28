@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Bài tập học tập</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+    <style>
+        body {
+            background: #f1f5f9;
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar cố định bên trái */
+        .sidebar {
+            width: 260px;
+            height: 100vh;
+            background: #0f172a;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding: 20px;
+            z-index: 1000;
+        }
+
+        /* Phần nội dung chính phải có margin-left bằng chiều rộng sidebar */
+        .main-content {
+            margin-left: 260px;
+            flex: 1;
+            padding: 40px;
+            width: calc(100% - 260px);
+            min-height: 100vh;
+        }
+
+        .nav-link {
+            color: #94a3b8;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            transition: 0.3s;
+            text-decoration: none;
+            display: block;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: #1e293b;
+            color: #fff !important;
+        }
+
+        .card-baitap {
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            background: white;
+        }
+
+        .rounded-pill-custom {
+            border-radius: 50px !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sidebar">
+        <h4 class="text-white fw-bold mb-4 px-2">QL Học Sinh</h4>
+        <nav class="nav flex-column">
+
+            <a href="/admin" class="nav-link"><i class="bi bi-speedometer2 me-2"></i> Tổng quan</a>
+            <a href="/taikhoan" class="nav-link"><i class="bi bi-person-badge me-2"></i> Quản lý tài khoản</a>
+            <a href="/hocsinh" class="nav-link active"><i class="bi bi-people me-2"></i>Học sinh</a>
+            <a href="/diem" class="nav-link"><i class="bi bi-book me-2"></i>Quản lý điểm</a>
+            <a href="/monhoc" class="nav-link"><i class="bi bi-book me-2"></i>Môn học</a>
+            <a href="/lop" class="nav-link "><i class="bi bi-door-open me-2"></i>Lớp học</a>
+            <a href="/baitap" class="nav-link "><i class="bi bi-journal-text me-2"></i>Bài tập</a>
+            <a href="/" class="nav-link"><i class="bi bi-house-door me-2"></i>Trang chủ</a>
+            <hr class="text-secondary">
+            <a href="/dangxuat" class="nav-link text-danger"><i class="bi bi-box-arrow-right me-2"></i>Đăng xuất</a>
+        </nav>
+    </div>
+
+    <div class="main-content">
+        <div class="main-card">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="fw-bold m-0 text-dark"><i class="bi bi-people-fill text-primary"></i> Danh sách học sinh</h2>
+                <div class="d-flex gap-2">
+                    <input type="text" id="txtSearch" onkeyup="searchHS()" class="form-control rounded-pill"
+                        placeholder="Tìm học sinh...">
+                    <a href="/hocsinh/them" class="btn btn-primary px-4 rounded-pill fw-bold">+ Thêm</a>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle" id="tableHS">
+                    <thead>
+                        <tr>
+                            <th class="text-center">STT</th>
+                            <th>Họ và Tên</th>
+                            <th class="text-center">Tuổi</th>
+                            <th>Lớp học</th>
+                            <th class="text-center">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% dsHocSinh.forEach((hs, index)=> { %>
+                            <tr>
+                                <td class="text-center">
+                                    <%= index + 1 %>
+                                </td>
+                                <td class="fw-bold">
+                                    <%= hs.HoTen %>
+                                </td>
+                                <td class="text-center">
+                                    <%= hs.Tuoi %>
+                                </td>
+                                <td><span class="badge bg-info text-dark">
+                                        <%= hs.Lop %>
+                                    </span></td>
+                                <td class="text-center">
+                                    <a href="/hocsinh/sua/<%= hs._id %>" class="btn btn-sm btn-outline-primary"><i
+                                            class="bi bi-pencil"></i></a>
+                                    <a href="/hocsinh/xoa/<%= hs._id %>" class="btn btn-sm btn-outline-danger"
+                                        onclick="return confirm('Xóa học sinh này?')"><i class="bi bi-trash"></i></a>
+                                </td>
+                            </tr>
+                            <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script>
+        function searchHS() {
+            let input = document.getElementById("txtSearch").value.toLowerCase();
+            let rows = document.querySelectorAll("#tableHS tbody tr");
+            rows.forEach(row => { row.style.display = row.innerText.toLowerCase().includes(input) ? "" : "none"; });
+        }
+    </script>
+</body>
+
+</html>

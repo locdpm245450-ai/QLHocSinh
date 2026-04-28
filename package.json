@@ -1,0 +1,22 @@
+{
+	"name": "QLHocSinh",
+	"version": "1.0.0",
+	"description": "Trang tin điện tử NodeJS + MongoDB Atlas",
+	"main": "index.js",
+	"scripts": {
+		"test": "nodemon index.js"
+	},
+	"author": "Nguyễn Tấn Lộc",
+	"license": "ISC",
+	"dependencies": {
+		"bcryptjs": "^3.0.3",
+		"cloudinary": "^1.41.3",
+		"ejs": "^5.0.1",
+		"express": "^5.2.1",
+		"express-session": "^1.19.0",
+		"mongoose": "^9.5.0",
+		"multer": "^2.1.1",
+		"multer-storage-cloudinary": "^4.0.0",
+		"nodemon": "^3.1.14"
+	}
+}

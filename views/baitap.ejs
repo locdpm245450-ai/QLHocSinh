@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Bài tập học tập</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+    <style>
+        body {
+            background: #f1f5f9;
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+        }
+
+        /* SIDEBAR - Đã đồng bộ màu và kích thước theo lop.ejs */
+        .sidebar {
+            width: 260px;
+            height: 100vh;
+            background: #0f172a;
+            /* Xanh Navy chuẩn  */
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding: 20px;
+            overflow-y: auto;
+            /* Thêm thanh cuộn nếu menu quá dài  */
+        }
+
+        /* Đổi admin-content thành main-content để đồng bộ layout */
+        .admin-content {
+            margin-left: 260px;
+            width: calc(100% - 260px);
+            padding: 40px;
+        }
+
+        .sidebar h4 {
+            color: white;
+            font-size: 32px;
+            margin-bottom: 35px;
+            font-weight: bold;
+        }
+
+        .nav-link {
+            color: #94a3b8;
+            padding: 12px 15px;
+            /* Đồng bộ padding [cite: 272] */
+            border-radius: 10px;
+            /* Đồng bộ bo góc [cite: 272] */
+            margin-bottom: 6px;
+            /* Đồng bộ khoảng cách [cite: 272] */
+            text-decoration: none;
+            display: block;
+            transition: .3s;
+            font-size: 16px;
+            /* Font size chuẩn của hệ thống */
+        }
+
+        /* Hiệu ứng di chuột chuẩn của Lớp học [cite: 273] */
+        .nav-link:hover {
+            background: #1e293b;
+            color: white !important;
+        }
+
+        /* Trạng thái Active chuẩn của Lớp học [cite: 274] */
+        .nav-link.active {
+            background: #1e293b;
+            color: white !important;
+        }
+
+        .nav-link i {
+            width: 25px;
+        }
+
+        hr {
+            border-color: #334155;
+        }
+    </style>
+</head>
+
+<body>
+
+    <% if(session.QuyenHan==='admin' || session.QuyenHan==='giaovien' ) { %>
+        <div class="sidebar">
+            <h4 class="text-white fw-bold mb-4 px-2">QL Học Sinh</h4>
+
+            <nav class="nav flex-column">
+
+                <a href="/admin" class="nav-link">
+                    <i class="bi bi-speedometer2 me-2"></i> Tổng quan
+                </a>
+
+                <a href="/taikhoan" class="nav-link">
+                    <i class="bi bi-person-badge me-2"></i> Quản lý tài khoản
+                </a>
+
+                <a href="/hocsinh" class="nav-link">
+                    <i class="bi bi-people me-2"></i> Học sinh
+                </a>
+
+                <a href="/diem" class="nav-link"><i class="bi bi-book me-2"></i>Quản lý điểm</a>
+
+                <a href="/monhoc" class="nav-link">
+                    <i class="bi bi-book me-2"></i> Môn học
+                </a>
+
+                <a href="/lop" class="nav-link ">
+                    <i class="bi bi-door-open me-2"></i> Lớp học
+                </a>
+
+                <a href="/baitap" class="nav-link active">
+                    <i class="bi bi-journal-text me-2"></i> Bài tập
+                </a>
+
+                <a href="/" class="nav-link">
+                    <i class="bi bi-house-door me-2"></i> Trang chủ
+                </a>
+
+                <hr class="text-secondary">
+
+                <a href="/dangxuat" class="nav-link text-danger">
+                    <i class="bi bi-box-arrow-right me-2"></i> Đăng xuất
+                </a>
+
+            </nav>
+        </div>
+        <div class="admin-content">
+            <% } else { %>
+                <nav class="navbar navbar-expand-lg navbar-student sticky-top">
+                    <div class="container">
+                        <a class="navbar-brand fw-bold text-primary fs-4" href="/"><i
+                                class="bi bi-mortarboard-fill"></i> QL HỌC SINH</a>
+                        <div class="navbar-nav ms-auto d-flex align-items-center gap-3">
+                            <a class="nav-link text-dark fw-bold" href="/">Trang chủ</a>
+                            <a class="nav-link text-primary fw-bold" href="/baitap">Bài tập</a>
+                            <div class="dropdown">
+                                <a class="nav-link dropdown-toggle bg-light px-3 py-2 rounded-pill shadow-sm text-dark fw-bold"
+                                    href="#" data-bs-toggle="dropdown">
+                                    <%= session.HoVaTen %>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end border-0 shadow mt-2">
+                                    <li><a class="dropdown-item" href="/thongtin">Cá nhân</a></li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li><a class="dropdown-item text-danger" href="/dangxuat">Thoát</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+                <div class="container student-content">
+                    <% } %>
+
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h1 class="fw-bold text-primary">Bài tập học tập</h1>
+                            <select class="form-select shadow-sm rounded-pill" id="locMonHoc" onchange="locBaiTap()"
+                                style="width: 200px;">
+                                <option value="all">Tất cả môn</option>
+                                <% dsMonHoc.forEach(function(mh){ %>
+                                    <option value="<%= mh.TenMon %>">
+                                        <%= mh.TenMon %>
+                                    </option>
+                                    <% }) %>
+                            </select>
+                        </div>
+
+                        <% if(session.QuyenHan !=='hocsinh' ) { %>
+                            <a href="/baitap/them" class="btn btn-primary px-4 rounded-pill mb-4 shadow-sm">+ Đăng bài
+                                tập</a>
+                            <% } %>
+
+                                <div id="danhSachBaiTap">
+                                    <% baitap.forEach(function(bt){ %>
+                                        <div class="card card-baitap p-4 mb-4 baiTapItem" data-mon="<%= bt.MonHoc %>">
+                                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                                <h4 class="fw-bold text-primary mb-0">
+                                                    <%= bt.MonHoc %>: <%= bt.TenBai %>
+                                                </h4>
+                                                <span class="badge bg-light text-dark border px-3 py-2 rounded-pill">
+                                                    <%= bt.Lop || 'Cả khối' %>
+                                                </span>
+                                            </div>
+                                            <p class="fs-5 text-secondary">
+                                                <%= bt.NoiDung %>
+                                            </p>
+                                            <div class="d-flex gap-2 mt-3">
+                                                <% if(session.QuyenHan==='hocsinh' ) { %>
+                                                    <a href="/baitap/nopbai/<%= bt._id %>"
+                                                        class="btn btn-success px-4 rounded-pill shadow-sm">Nộp bài
+                                                        ngay</a>
+                                                    <% } else { %>
+                                                        <a href="/baitap/sua/<%= bt._id %>"
+                                                            class="btn btn-sm btn-outline-warning rounded-circle"><i
+                                                                class="bi bi-pencil"></i></a>
+                                                        <a href="/baitap/xoa/<%= bt._id %>"
+                                                            class="btn btn-sm btn-outline-danger rounded-pill px-3"
+                                                            onclick="return confirm('Xóa bài?')">Xóa</a>
+                                                        <% } %>
+                                            </div>
+                                        </div>
+                                        <% }) %>
+                                </div>
+                </div>
+                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+                <script>
+                    function locBaiTap() {
+                        let mon = document.getElementById("locMonHoc").value;
+                        let items = document.querySelectorAll(".baiTapItem");
+                        items.forEach(item => {
+                            item.style.display = (mon === "all" || item.dataset.mon === mon) ? "block" : "none";
+                        });
+                    }
+                </script>
+</body>
+
+</html>
