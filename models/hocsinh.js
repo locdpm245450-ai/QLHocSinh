@@ -1,6 +1,13 @@
 const mongoose = require("mongoose");
 
 const hocSinhVal = new mongoose.Schema({
+
+    MaHocSinh: {
+        type: String,
+        required: true,
+        unique: true
+    },
+
     HoTen: {
         type: String,
         required: true,
@@ -13,6 +20,10 @@ const hocSinhVal = new mongoose.Schema({
     NgaySinh: {
         type: Date,
     },
+
+    Tuoi: {
+        type: Number
+    }
 });
 
 module.exports = mongoose.model("HocSinh", hocSinhVal);

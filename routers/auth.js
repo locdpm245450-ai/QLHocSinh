@@ -72,7 +72,7 @@ router.get('/dangxuat', (req, res) => {
 router.get('/', (req, res) => {
 	res.render('index', {
 		title: 'HỆ THỐNG QUẢN LÝ',
-		session: req.session // Dòng này cực kỳ quan trọng để hiện tên người dùng
+		session: req.session 
 	});
 });
 

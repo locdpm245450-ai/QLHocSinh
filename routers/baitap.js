@@ -50,8 +50,8 @@ router.get('/them', giaoVien, async (req, res) => {
 
         res.render('baitap_them', {
             session: req.session,
-            monhoc: dsMonHoc, // Truyền biến monhoc
-            lop: dsLop       // Truyền biến lop để sửa lỗi "lop is not defined"
+            monhoc: dsMonHoc, 
+            lop: dsLop      
         });
     } catch (err) {
         res.status(500).send("Lỗi: " + err.message);

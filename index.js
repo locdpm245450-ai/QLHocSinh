@@ -34,6 +34,10 @@ const lichRouter = require('./routers/lich');
 
 const thoikhoabieuRoutes = require('./routers/thoikhoabieu');
 
+const lichthiRouter = require("./routers/lichthi");
+
+const quydinhRouter = require("./routers/quydinh");
+
 // ====================== MONGODB ======================
 
 const uri =
@@ -124,6 +128,10 @@ app.use('/monhoc', monhocRouter);
 app.use('/lich', lichRouter);
 
 app.use('/thoikhoabieu', thoikhoabieuRoutes);
+
+app.use("/lichthi", lichthiRouter);
+
+app.use("/quydinh", quydinhRouter);
 // ===== BÀI TẬP =====
 
 let dsBaiTap = [];
@@ -169,6 +177,42 @@ app.post('/baitap/them', (req, res) => {
     res.redirect('/baitap');
 });
 
+// ===== GIỚI THIỆU =====
+
+let gioiThieu = "Chào mừng bạn đến với hệ thống quản lý học sinh.";
+
+// Trang hiển thị giới thiệu
+app.get('/gioithieu', (req, res) => {
+    res.render('gioithieu', {
+        session: req.session,
+        noidung: gioiThieu
+    });
+});
+
+// Form sửa (chỉ admin)
+app.get('/gioithieu/sua', (req, res) => {
+
+    if (!req.session || req.session.QuyenHan !== 'admin') {
+        return res.redirect('/gioithieu');
+    }
+
+    res.render('gioithieu_sua', {
+        session: req.session,
+        noidung: gioiThieu
+    });
+});
+
+// Xử lý lưu
+app.post('/gioithieu/sua', (req, res) => {
+
+    if (!req.session || req.session.QuyenHan !== 'admin') {
+        return res.redirect('/gioithieu');
+    }
+
+    gioiThieu = req.body.noidung;
+
+    res.redirect('/gioithieu');
+});
 // ====================== SERVER ======================
 
 app.listen(3000, () => {

@@ -1,6 +1,12 @@
-var mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-var taiKhoanVal = new mongoose.Schema({
+const taiKhoanSchema = new mongoose.Schema({
+	
+	MaHocSinh: {
+		type: String,
+		unique: true,
+		sparse: true
+	},
 
 	HoVaTen: {
 		type: String,
@@ -8,15 +14,9 @@ var taiKhoanVal = new mongoose.Schema({
 	},
 
 	Email: {
-		type: String
-	},
-
-	HinhAnh: {
-		type: String
-	},
-
-	SoDienThoai: {
-		type: String
+		type: String,
+		required: true,
+		unique: true
 	},
 
 	TenDangNhap: {
@@ -36,13 +36,15 @@ var taiKhoanVal = new mongoose.Schema({
 		default: 'hocsinh'
 	},
 
+	HinhAnh: {
+		type: String,
+		default: '/images/default.png'
+	},
+
 	KichHoat: {
 		type: Number,
 		default: 1
 	}
-
 });
 
-var taiKhoanModel = mongoose.model('TaiKhoan', taiKhoanVal);
-
-module.exports = taiKhoanModel;
+module.exports = mongoose.model("TaiKhoan", taiKhoanSchema);

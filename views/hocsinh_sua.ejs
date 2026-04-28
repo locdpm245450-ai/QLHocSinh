@@ -1,62 +1,149 @@
-<!-- ====================== views/hocsinh_sua.ejs ====================== -->
-
 <!DOCTYPE html>
 <html lang="vi">
 
 <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>
+        <%= typeof title !=='undefined' ? title : 'Sửa thông tin học sinh' %>
+    </title>
 
-    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
 
-    <title>Sửa học sinh</title>
+    <style>
+        body {
+            background: #f1f5f9;
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            min-height: 100vh;
+        }
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+        /* SIDEBAR CỐ ĐỊNH BÊN TRÁI [cite: 111-112] */
+        .sidebar {
+            width: 260px;
+            height: 100vh;
+            background: #0f172a;
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            z-index: 1000;
+            overflow-y: auto;
+        }
 
+        /* PHẦN NỘI DUNG CHÍNH - ĐẨY SANG PHẢI 260PX [cite: 113] */
+        .main-content {
+            margin-left: 260px;
+            flex: 1;
+            padding: 40px;
+            width: calc(100% - 260px);
+        }
+
+        .nav-link {
+            color: #94a3b8;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 5px;
+            transition: 0.3s;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: #1e293b;
+            color: white !important;
+        }
+
+        .main-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+    </style>
 </head>
 
 <body>
-
-    <div class="container mt-4">
-
-        <a href="/hocsinh" class="btn btn-secondary mb-3">
-            ← Quay về
-        </a>
-
-        <h1>Sửa học sinh</h1>
-
-        <form method="POST">
-
-            <div class="mb-3">
-
-                <label>Họ tên</label>
-
-                <input type="text" name="hoten" value="<%= hocSinh.HoTen %>" class="form-control" required>
-
-            </div>
-
-            <div class="mb-3">
-
-                <label>Tuổi</label>
-
-                <input type="number" name="tuoi" value="<%= hocSinh.Tuoi %>" class="form-control" required>
-
-            </div>
-
-            <div class="mb-3">
-
-                <label>Lớp</label>
-
-                <input type="text" name="lop" value="<%= hocSinh.Lop %>" class="form-control" required>
-
-            </div>
-
-            <button class="btn btn-warning">
-                Cập nhật
-            </button>
-
-        </form>
-
+    <div class="sidebar">
+        <h4 class="text-white fw-bold mb-4 px-2">QL Học Sinh</h4>
+        <nav class="nav flex-column">
+            <a href="/admin" class="nav-link"><i class="bi bi-speedometer2 me-2"></i> Tổng quan</a>
+            <a href="/taikhoan" class="nav-link"><i class="bi bi-person-badge me-2"></i> Quản lý tài khoản</a>
+            <a href="/hocsinh" class="nav-link active"><i class="bi bi-people me-2"></i>Học sinh</a>
+            <a href="/diem" class="nav-link"><i class="bi bi-book me-2"></i> Quản lý điểm</a>
+            <a href="/monhoc" class="nav-link"><i class="bi bi-book me-2"></i>Môn học</a>
+            <a href="/lop" class="nav-link"><i class="bi bi-door-open me-2"></i>Lớp học</a>
+            <a href="/baitap" class="nav-link"><i class="bi bi-journal-text me-2"></i>Bài tập</a>
+            <a href="/" class="nav-link"><i class="bi bi-house-door me-2"></i>Trang chủ</a>
+            <hr class="text-secondary">
+            <a href="/dangxuat" class="nav-link text-danger"><i class="bi bi-box-arrow-right me-2"></i>Đăng xuất</a>
+        </nav>
     </div>
 
+    <div class="main-content">
+        <div class="main-card">
+            <div class="mb-4">
+                <a href="/hocsinh" class="btn btn-outline-secondary rounded-pill px-4">
+                    <i class="bi bi-arrow-left me-1"></i> Quay về
+                </a>
+            </div>
+
+            <h1 class="fw-bold text-dark mb-4">
+                <i class="bi bi-pencil-square text-warning me-2"></i>Sửa thông tin học sinh
+            </h1>
+
+            <form action="/hocsinh/sua/<%= hocSinh._id %>" method="POST">
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Mã học sinh</label>
+                        <input type="text" name="mahs" value="<%= hocSinh.MaHocSinh %>" class="form-control rounded-3"
+                            required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Họ và tên</label>
+                        <input type="text" name="hoten" value="<%= hocSinh.HoTen %>" class="form-control rounded-3"
+                            required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Lớp</label>
+                        <input type="text" name="lop" value="<%= hocSinh.Lop %>" class="form-control rounded-3"
+                            required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Ngày sinh</label>
+                        <input type="date" name="ngaysinh"
+                            value="<%= hocSinh.NgaySinh ? hocSinh.NgaySinh.toISOString().split('T')[0] : '' %>"
+                            class="form-control rounded-3">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Giới tính</label>
+                        <select name="gioitinh" class="form-select rounded-3">
+                            <option value="Nam" <%=hocSinh.GioiTinh==='Nam' ? 'selected' : '' %>>Nam</option>
+                            <option value="Nữ" <%=hocSinh.GioiTinh==='Nữ' ? 'selected' : '' %>>Nữ</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Địa chỉ</label>
+                        <input type="text" name="diachi" value="<%= hocSinh.DiaChi %>" class="form-control rounded-3">
+                    </div>
+                </div>
+
+                <div class="mt-5">
+                    <button type="submit" class="btn btn-warning px-5 py-2 rounded-pill fw-bold shadow-sm">
+                        <i class="bi bi-check2-circle me-2"></i>CẬP NHẬT THÔNG TIN
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

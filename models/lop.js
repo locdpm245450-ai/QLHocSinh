@@ -1,10 +1,11 @@
 const mongoose = require('mongoose');
 
-const lopVal = new mongoose.Schema({
+const lopSchema = new mongoose.Schema({
     TenLop: { type: String, required: true },
     MaLop: { type: String, required: true, unique: true },
     GiaoVienChuNhiem: String,
-    DanhSachHocSinh: { type: [String], default: [] } 
+  
+    DanhSachHocSinh: { type: [String], default: [] }
 });
 
-module.exports = mongoose.model('Lop', lopVal);
+module.exports = mongoose.model('Lop', lopSchema);

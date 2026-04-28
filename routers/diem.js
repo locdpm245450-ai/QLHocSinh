@@ -48,64 +48,77 @@ router.get('/', async (req, res) => {
 
 
 // ================= FORM THÊM ĐIỂM =================
-
 router.get('/them', async (req, res) => {
-
-    if (
-        req.session.QuyenHan !== 'giaovien' &&
-        req.session.QuyenHan !== 'admin'
-    ) {
+    if (req.session.QuyenHan !== 'giaovien' && req.session.QuyenHan !== 'admin') {
         return res.send('Không có quyền');
     }
 
-    const hocsinh = await TaiKhoan.find({
-        QuyenHan: 'hocsinh'
-    });
+    try {
+        const dsHocSinh = await TaiKhoan.find({ QuyenHan: 'hocsinh' });
+        const dsMonHoc = await MonHoc.find();
 
-    const monhoc = await MonHoc.find();
-
-    res.render('diem_them', {
-        hocsinh,
-        monhoc
-    });
-
+        res.render('diem_them', {
+            session: req.session,
+            hocsinh: dsHocSinh, 
+            monhoc: dsMonHoc    
+        });
+    } catch (err) {
+        res.status(500).send("Lỗi: " + err.message);
+    }
 });
 
+// ================= XÓA ĐIỂM =================
+router.get('/xoa/:id', async (req, res) => {
+    if (req.session.QuyenHan !== 'admin' && req.session.QuyenHan !== 'giaovien') {
+        return res.send('Không có quyền thực hiện thao tác này');
+    }
+    try {
+        await Diem.findByIdAndDelete(req.params.id);
+        res.redirect('/diem');
+    } catch (err) {
+        res.status(500).send("Lỗi khi xóa: " + err.message);
+    }
+});
 
-// ================= THÊM ĐIỂM =================
-
-router.post('/them', async (req, res) => {
-
-    if (
-        req.session.QuyenHan !== 'giaovien' &&
-        req.session.QuyenHan !== 'admin'
-    ) {
+// ================= FORM SỬA ĐIỂM (GET) =================
+router.get('/sua/:id', async (req, res) => {
+    if (req.session.QuyenHan !== 'admin' && req.session.QuyenHan !== 'giaovien') {
         return res.send('Không có quyền');
     }
+    try {
+        const diemId = req.params.id;
+        const diemCanSua = await Diem.findById(diemId);
+        const dsHocSinh = await TaiKhoan.find({ QuyenHan: 'hocsinh' });
+        const dsMonHoc = await MonHoc.find();
 
-    await Diem.create({
+        res.render('diem_sua', {
+            session: req.session,
+            diem: diemCanSua,
+            hocsinh: dsHocSinh,
+            monhoc: dsMonHoc
+        });
+    } catch (err) {
+        res.redirect('/diem');
+    }
+});
 
-        HocSinh: req.body.HocSinh,
-
-        // phải là _id môn học
-        MonHoc: req.body.MonHoc,
-
-        DiemMieng: req.body.DiemMieng,
-
-        Diem15Phut: req.body.Diem15Phut,
-
-        Diem1Tiet: req.body.Diem1Tiet,
-
-        DiemThi: req.body.DiemThi,
-
-        HocKy: req.body.HocKy,
-
-        NamHoc: req.body.NamHoc
-
-    });
-
-    res.redirect('/diem');
-
+// ================= CẬP NHẬT ĐIỂM (POST) =================
+router.post('/sua/:id', async (req, res) => {
+    try {
+        await Diem.findByIdAndUpdate(req.params.id, {
+            HocSinh: req.body.HocSinh,
+            MonHoc: req.body.MonHoc,
+            DiemMieng: req.body.DiemMieng,
+            Diem15Phut: req.body.Diem15Phut,
+            Diem1Tiet: req.body.Diem1Tiet,
+            DiemThi: req.body.DiemThi,
+            HocKy: req.body.HocKy,
+            NamHoc: req.body.NamHoc
+        });
+        res.redirect('/diem');
+    } catch (err) {
+        res.status(500).send("Lỗi cập nhật: " + err.message);
+    }
 });
 
 module.exports = router;
