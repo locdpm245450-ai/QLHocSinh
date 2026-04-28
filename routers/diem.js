@@ -5,8 +5,6 @@ const Diem = require('../models/diem');
 const TaiKhoan = require('../models/taikhoan');
 const MonHoc = require('../models/monhoc');
 
-
-// ================= DANH SÁCH ĐIỂM =================
 router.get('/', async (req, res) => {
     if (!req.session.MaNguoiDung) {
         return res.redirect('/dangnhap');
@@ -26,7 +24,6 @@ router.get('/', async (req, res) => {
 });
 
 
-// ================= FORM THÊM ĐIỂM (HIỂN THỊ) =================
 router.get('/them', async (req, res) => {
     if (req.session.QuyenHan !== 'giaovien' && req.session.QuyenHan !== 'admin') {
         return res.send('Không có quyền');
@@ -47,7 +44,6 @@ router.get('/them', async (req, res) => {
 });
 
 
-// ================= XỬ LÝ LƯU ĐIỂM MỚI (POST) - THÊM PHẦN NÀY =================
 router.post('/them', async (req, res) => {
     if (req.session.QuyenHan !== 'giaovien' && req.session.QuyenHan !== 'admin') {
         return res.status(403).send('Không có quyền thực hiện');
@@ -56,7 +52,6 @@ router.post('/them', async (req, res) => {
     try {
         const { HocSinh, MonHoc, DiemMieng, Diem15Phut, Diem1Tiet, DiemThi, HocKy, NamHoc } = req.body;
 
-        // Tạo một bản ghi điểm mới
         const diemMoi = new Diem({
             HocSinh,
             MonHoc,
@@ -75,8 +70,6 @@ router.post('/them', async (req, res) => {
     }
 });
 
-
-// ================= XÓA ĐIỂM =================
 router.get('/xoa/:id', async (req, res) => {
     if (req.session.QuyenHan !== 'admin' && req.session.QuyenHan !== 'giaovien') {
         return res.send('Không có quyền thực hiện thao tác này');
@@ -89,7 +82,6 @@ router.get('/xoa/:id', async (req, res) => {
     }
 });
 
-// ================= FORM SỬA ĐIỂM (GET) =================
 router.get('/sua/:id', async (req, res) => {
     if (req.session.QuyenHan !== 'admin' && req.session.QuyenHan !== 'giaovien') {
         return res.send('Không có quyền');
@@ -111,7 +103,6 @@ router.get('/sua/:id', async (req, res) => {
     }
 });
 
-// ================= CẬP NHẬT ĐIỂM (POST) =================
 router.post('/sua/:id', async (req, res) => {
     try {
         await Diem.findByIdAndUpdate(req.params.id, {
